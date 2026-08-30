@@ -1,44 +1,44 @@
 name: Release Validation Pipeline
 
 on:
-      push:
-        branches:
-          - '**'
-        tags:
-          - 'v*'
+  push:
+    branches:
+      - "**"
+    tags:
+      - "v*"
 
 jobs:
-      test:
-        runs-on: ubuntu-latest
-        services:
-          postgres:
-            image: postgres:17-alpine
-            env:
-              POSTGRES_USER: postgres
-              POSTGRES_PASSWORD: postgres
-              POSTGRES_DB: articles_test
-            ports:
-              - 5431:5432
-            options: >-
-              --health-cmd pg_isready
-              --health-interval 10s
-              --health-timeout 5s
-              --health-retries 5
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: articles_test
+        ports:
+          - 5431:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-        steps:
-          - name: Checkout Repository
-            uses: actions/checkout@v4
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
 
-          - name: Set up Go Environment
-            uses: actions/setup-go@v5
-            with:
-              go-version-file: 'go.mod'
-              cache: true
+      - name: Set up Go Environment
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: "go.mod"
+          cache: true
 
-          - name: Execute Unit Tests
-            run: make test-unit
+      - name: Execute Unit Tests
+        run: make test-unit
 
-          - name: Execute Integration Tests
-            env:
-              DATABASE_DSN: postgres://postgres:postgres@localhost:5431/articles_test?sslmode=disable
-            run: make test-integration
+      - name: Execute Integration Tests
+        env:
+          DATABASE_DSN: postgres://postgres:postgres@localhost:5431/articles_test?sslmode=disable
+        run: make test-integration
