@@ -2,6 +2,8 @@ name: Release Validation Pipeline
 
 on:
       push:
+        branches:
+          - '**'
         tags:
           - 'v*'
 
@@ -38,5 +40,5 @@ jobs:
 
           - name: Execute Integration Tests
             env:
-              DATABASE_DSN: postgres://postgres:postgres@localhost:5431/articles_test?sslmode=disable
+              DATABASE_DSN: postgres://postgres:postgres@localhost:5432/articles_test?sslmode=disable
             run: make test-integration
