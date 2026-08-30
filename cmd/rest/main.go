@@ -19,7 +19,7 @@ type articleDTO struct {
 }
 
 func main() {
-	db, err := gorm.Open(pgdriver.Open("host=localhost port=5432 user=postgres password=postgres dbname=articles sslmode=disable"), &gorm.Config{})
+	db, err := gorm.Open(pgdriver.Open(resolveDSN()), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
@@ -53,9 +53,17 @@ func main() {
 		deleteHandler.Delete(w, r)
 	})
 
-	port := ":8080"
-	log.Printf("Starting REST service on port %s...", port)
-	if err := http.ListenAndServe(port, mux); err != nil {
+	address := resolveAddress()
+	log.Printf("Starting REST service on port %s...", address)
+	if err := http.ListenAndServe(address, mux); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
+}
+
+func resolveDSN() string {
+	return "host=localhost port=5431 user=postgres password=postgres dbname=articles_test sslmode=disable"
+}
+
+func resolveAddress() string {
+	return ":8080"
 }
