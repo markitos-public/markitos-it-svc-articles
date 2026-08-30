@@ -1,9 +1,7 @@
-name: Release Validation Pipeline
+name: Integration Test Pipeline
 
 on:
   push:
-    branches:
-      - "**"
     tags:
       - "v*"
 
