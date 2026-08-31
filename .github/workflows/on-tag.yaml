@@ -55,9 +55,8 @@ jobs:
       - name: Construir y publicar imagen Docker
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: markitos-it/images
-          IMAGE_NAME: ${{ github.event.repository.name }}
+          REPOSITORY: markitos-it-svc-articles
           IMAGE_TAG: ${{ github.ref_name }}
         run: |
-          docker build -t $REGISTRY/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG .
-          docker push $REGISTRY/$REPOSITORY/$IMAGE_NAME:$IMAGE_TAG
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
