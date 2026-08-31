@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"markitos-it-svc-articles/internal/infraestructure/persistence/postgres"
 	"markitos-it-svc-articles/internal/infraestructure/rest"
@@ -80,7 +81,12 @@ func connectDatabase() (*gorm.DB, error) {
 }
 
 func resolveDSN() string {
-	return "host=localhost port=5431 user=postgres password=postgres dbname=articles_test sslmode=disable"
+	dsn := os.Getenv("DATABASE_DSN")
+	if dsn == "" {
+		log.Fatal("DATABASE_DSN must be set")
+	}
+
+	return dsn
 }
 
 func resolveAddress() string {
