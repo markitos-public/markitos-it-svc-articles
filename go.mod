@@ -1,4 +1,4 @@
-module markitos-it-svc-articles
+module markitos-it-svc-faqs
 
 go 1.26.6
 

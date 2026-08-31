@@ -2,70 +2,70 @@ package postgres
 
 import (
 	"errors"
-	"markitos-it-svc-articles/internal/domain/models"
-	"markitos-it-svc-articles/internal/domain/persistence"
-	"markitos-it-svc-articles/internal/domain/types"
+	"markitos-it-svc-faqs/internal/domain/models"
+	"markitos-it-svc-faqs/internal/domain/persistence"
+	"markitos-it-svc-faqs/internal/domain/types"
 
 	"gorm.io/gorm"
 )
 
-type PostgresArticleRepository struct {
+type PostgresFaqRepository struct {
 	db *gorm.DB
 }
 
-type articleRecord struct {
+type faqRecord struct {
 	ID      string   `gorm:"primaryKey;type:uuid;not null"`
 	Title   string   `gorm:"not null"`
 	Content string   `gorm:"not null"`
 	Tags    []string `gorm:"serializer:json;not null"`
 }
 
-func (articleRecord) TableName() string {
-	return "articles"
+func (faqRecord) TableName() string {
+	return "faqs"
 }
 
-func NewPostgresArticleRepository(db *gorm.DB) persistence.ArticleRepository {
+func NewPostgresFaqRepository(db *gorm.DB) persistence.FaqRepository {
 	if db == nil {
 		panic("postgres repository requires a valid gorm db instance")
 	}
 
-	if err := db.AutoMigrate(&articleRecord{}); err != nil {
+	if err := db.AutoMigrate(&faqRecord{}); err != nil {
 		panic(err)
 	}
 
-	return &PostgresArticleRepository{db: db}
+	return &PostgresFaqRepository{db: db}
 }
 
-func (r *PostgresArticleRepository) Save(article *models.Article) error {
-	if article == nil {
-		return errors.New("article is nil")
+func (r *PostgresFaqRepository) Save(faq *models.Faq) error {
+	if faq == nil {
+		return errors.New("faq is nil")
 	}
 	if r.db == nil {
 		return errors.New("database connection is nil")
 	}
-	if article.ID == nil || article.Title == nil || article.Content == nil || article.Tags == nil {
-		return errors.New("article is incomplete")
+	if faq.ID == nil || faq.Title == nil || faq.Content == nil || faq.Tags == nil {
+		return errors.New("faq is incomplete")
 	}
 
-	payload := articleRecord{
-		ID:      article.ID.Value(),
-		Title:   article.Title.Value(),
-		Content: article.Content.Value(),
-		Tags:    article.Tags.Value(),
+	payload := faqRecord{
+		ID:      faq.ID.Value(),
+		Title:   faq.Title.Value(),
+		Content: faq.Content.Value(),
+		Tags:    faq.Tags.Value(),
 	}
 
 	return r.db.Save(&payload).Error
 }
 
-func (r *PostgresArticleRepository) Get(id *types.ID) (*models.Article, error) {
+func (r *PostgresFaqRepository) Get(id *types.ID) (*models.Faq, error) {
 	if id == nil {
-		return nil, errors.New("article id is nil")
+		return nil, errors.New("faq id is nil")
 	}
 	if r.db == nil {
 		return nil, errors.New("database connection is nil")
 	}
 
-	var payload articleRecord
+	var payload faqRecord
 	result := r.db.Where("id = ?", id.Value()).First(&payload)
 	if result.Error != nil {
 		if errors.Is(result.Error, gorm.ErrRecordNotFound) {
@@ -74,43 +74,43 @@ func (r *PostgresArticleRepository) Get(id *types.ID) (*models.Article, error) {
 		return nil, result.Error
 	}
 
-	articleID, err := types.NewIDFromString(payload.ID)
+	faqID, err := types.NewIDFromString(payload.ID)
 	if err != nil {
 		return nil, err
 	}
 
-	articleTitle, err := types.NewTitle(payload.Title)
+	faqTitle, err := types.NewTitle(payload.Title)
 	if err != nil {
 		return nil, err
 	}
 
-	articleContent, err := types.NewContent(payload.Content)
+	faqContent, err := types.NewContent(payload.Content)
 	if err != nil {
 		return nil, err
 	}
 
-	articleTags, err := types.NewTags(payload.Tags)
+	faqTags, err := types.NewTags(payload.Tags)
 	if err != nil {
 		return nil, err
 	}
 
-	return &models.Article{
-		ID:      articleID,
-		Title:   articleTitle,
-		Content: articleContent,
-		Tags:    articleTags,
+	return &models.Faq{
+		ID:      faqID,
+		Title:   faqTitle,
+		Content: faqContent,
+		Tags:    faqTags,
 	}, nil
 }
 
-func (r *PostgresArticleRepository) Delete(id *types.ID) error {
+func (r *PostgresFaqRepository) Delete(id *types.ID) error {
 	if id == nil {
-		return errors.New("article id is nil")
+		return errors.New("faq id is nil")
 	}
 	if r.db == nil {
 		return errors.New("database connection is nil")
 	}
 
-	result := r.db.Delete(&articleRecord{}, "id = ?", id.Value())
+	result := r.db.Delete(&faqRecord{}, "id = ?", id.Value())
 	if result.Error != nil {
 		return result.Error
 	}
@@ -121,25 +121,25 @@ func (r *PostgresArticleRepository) Delete(id *types.ID) error {
 	return nil
 }
 
-func (r *PostgresArticleRepository) Update(article *models.Article) error {
-	if article == nil {
-		return errors.New("article is nil")
+func (r *PostgresFaqRepository) Update(faq *models.Faq) error {
+	if faq == nil {
+		return errors.New("faq is nil")
 	}
 	if r.db == nil {
 		return errors.New("database connection is nil")
 	}
-	if article.ID == nil || article.Title == nil || article.Content == nil || article.Tags == nil {
-		return errors.New("article is incomplete")
+	if faq.ID == nil || faq.Title == nil || faq.Content == nil || faq.Tags == nil {
+		return errors.New("faq is incomplete")
 	}
 
-	payload := articleRecord{
-		ID:      article.ID.Value(),
-		Title:   article.Title.Value(),
-		Content: article.Content.Value(),
-		Tags:    article.Tags.Value(),
+	payload := faqRecord{
+		ID:      faq.ID.Value(),
+		Title:   faq.Title.Value(),
+		Content: faq.Content.Value(),
+		Tags:    faq.Tags.Value(),
 	}
 
-	result := r.db.Model(&articleRecord{}).Where("id = ?", payload.ID).Updates(payload)
+	result := r.db.Model(&faqRecord{}).Where("id = ?", payload.ID).Updates(payload)
 	if result.Error != nil {
 		return result.Error
 	}
@@ -150,45 +150,45 @@ func (r *PostgresArticleRepository) Update(article *models.Article) error {
 	return nil
 }
 
-func (r *PostgresArticleRepository) List() ([]*models.Article, error) {
+func (r *PostgresFaqRepository) List() ([]*models.Faq, error) {
 	if r.db == nil {
 		return nil, errors.New("database connection is nil")
 	}
 
-	var payloads []articleRecord
+	var payloads []faqRecord
 	if err := r.db.Find(&payloads).Error; err != nil {
 		return nil, err
 	}
 
-	articles := make([]*models.Article, 0, len(payloads))
+	faqs := make([]*models.Faq, 0, len(payloads))
 	for _, payload := range payloads {
-		articleID, err := types.NewIDFromString(payload.ID)
+		faqID, err := types.NewIDFromString(payload.ID)
 		if err != nil {
 			return nil, err
 		}
 
-		articleTitle, err := types.NewTitle(payload.Title)
+		faqTitle, err := types.NewTitle(payload.Title)
 		if err != nil {
 			return nil, err
 		}
 
-		articleContent, err := types.NewContent(payload.Content)
+		faqContent, err := types.NewContent(payload.Content)
 		if err != nil {
 			return nil, err
 		}
 
-		articleTags, err := types.NewTags(payload.Tags)
+		faqTags, err := types.NewTags(payload.Tags)
 		if err != nil {
 			return nil, err
 		}
 
-		articles = append(articles, &models.Article{
-			ID:      articleID,
-			Title:   articleTitle,
-			Content: articleContent,
-			Tags:    articleTags,
+		faqs = append(faqs, &models.Faq{
+			ID:      faqID,
+			Title:   faqTitle,
+			Content: faqContent,
+			Tags:    faqTags,
 		})
 	}
 
-	return articles, nil
+	return faqs, nil
 }

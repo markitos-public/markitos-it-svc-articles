@@ -1,30 +1,30 @@
 package application
 
 import (
-	"markitos-it-svc-articles/internal/domain/models"
-	"markitos-it-svc-articles/internal/domain/persistence"
+	"markitos-it-svc-faqs/internal/domain/models"
+	"markitos-it-svc-faqs/internal/domain/persistence"
 )
 
-type SaveArticleUseCase struct {
-	repo persistence.ArticleRepository
+type SaveFaqUseCase struct {
+	repo persistence.FaqRepository
 }
 
-func NewSaveArticleUseCase(repo persistence.ArticleRepository) *SaveArticleUseCase {
+func NewSaveFaqUseCase(repo persistence.FaqRepository) *SaveFaqUseCase {
 
-	return &SaveArticleUseCase{repo: repo}
+	return &SaveFaqUseCase{repo: repo}
 
 }
 
-func (uc *SaveArticleUseCase) Save(title, content string, tags []string) (string, error) {
-	article, err := models.NewArticle(title, content, tags)
+func (uc *SaveFaqUseCase) Save(title, content string, tags []string) (string, error) {
+	faq, err := models.NewFaq(title, content, tags)
 	if err != nil {
 		return "", err
 	}
 
-	err = uc.repo.Save(article)
+	err = uc.repo.Save(faq)
 	if err != nil {
 		return "", err
 	}
 
-	return article.ID.Value(), nil
+	return faq.ID.Value(), nil
 }

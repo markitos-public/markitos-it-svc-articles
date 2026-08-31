@@ -1,16 +1,16 @@
 package rest
 
 import (
-	"markitos-it-svc-articles/internal/domain/application"
-	"markitos-it-svc-articles/internal/domain/persistence"
+	"markitos-it-svc-faqs/internal/domain/application"
+	"markitos-it-svc-faqs/internal/domain/persistence"
 	"net/http"
 )
 
 type RESTDeleteUseCase struct {
-	repository persistence.ArticleRepository
+	repository persistence.FaqRepository
 }
 
-func NewRESTDeleteUseCase(repository persistence.ArticleRepository) *RESTDeleteUseCase {
+func NewRESTDeleteUseCase(repository persistence.FaqRepository) *RESTDeleteUseCase {
 	return &RESTDeleteUseCase{
 		repository: repository,
 	}
@@ -19,7 +19,7 @@ func NewRESTDeleteUseCase(repository persistence.ArticleRepository) *RESTDeleteU
 func (uc *RESTDeleteUseCase) Delete(w http.ResponseWriter, r *http.Request) {
 	idStr := r.PathValue("id")
 
-	deleteUC := application.NewDeleteArticleUseCase(uc.repository)
+	deleteUC := application.NewDeleteFaqUseCase(uc.repository)
 	if err := deleteUC.Delete(idStr); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return

@@ -5,14 +5,14 @@ import (
 	"net/http"
 	"os"
 
-	"markitos-it-svc-articles/internal/infraestructure/persistence/postgres"
-	"markitos-it-svc-articles/internal/infraestructure/rest"
+	"markitos-it-svc-faqs/internal/infraestructure/persistence/postgres"
+	"markitos-it-svc-faqs/internal/infraestructure/rest"
 
 	pgdriver "gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-type articleDTO struct {
+type faqDTO struct {
 	ID      string   `json:"id,omitempty"`
 	Title   string   `json:"title"`
 	Content string   `json:"content"`
@@ -25,7 +25,7 @@ func main() {
 		log.Fatalf("database connectivity check failed: %v", err)
 	}
 
-	repo := postgres.NewPostgresArticleRepository(db)
+	repo := postgres.NewPostgresFaqRepository(db)
 	saveHandler := rest.NewRESTSaveUseCase(repo)
 	getHandler := rest.NewRESTGetUseCase(repo)
 	updateHandler := rest.NewRESTUpdateUseCase(repo)
@@ -33,24 +33,24 @@ func main() {
 	listHandler := rest.NewRESTListUseCase(repo)
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /articles", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /faqs", func(w http.ResponseWriter, r *http.Request) {
 		listHandler.List(w, r)
 	})
 
-	mux.HandleFunc("GET /articles/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
 		getHandler.Get(w, r)
 	})
 
-	mux.HandleFunc("POST /articles", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("POST /faqs", func(w http.ResponseWriter, r *http.Request) {
 		saveHandler.Save(w, r)
 
 	})
 
-	mux.HandleFunc("PUT /articles/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("PUT /faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
 		updateHandler.Update(w, r)
 	})
 
-	mux.HandleFunc("DELETE /articles/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("DELETE /faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
 		deleteHandler.Delete(w, r)
 	})
 

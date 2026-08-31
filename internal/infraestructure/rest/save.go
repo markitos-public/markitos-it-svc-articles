@@ -2,29 +2,29 @@ package rest
 
 import (
 	"encoding/json"
-	"markitos-it-svc-articles/internal/domain/application"
-	"markitos-it-svc-articles/internal/domain/persistence"
+	"markitos-it-svc-faqs/internal/domain/application"
+	"markitos-it-svc-faqs/internal/domain/persistence"
 	"net/http"
 )
 
 type RESTSaveUseCase struct {
-	repository persistence.ArticleRepository
+	repository persistence.FaqRepository
 }
 
-func NewRESTSaveUseCase(repository persistence.ArticleRepository) *RESTSaveUseCase {
+func NewRESTSaveUseCase(repository persistence.FaqRepository) *RESTSaveUseCase {
 	return &RESTSaveUseCase{
 		repository: repository,
 	}
 }
 
 func (uc *RESTSaveUseCase) Save(w http.ResponseWriter, r *http.Request) {
-	var dto articleDTO
+	var dto faqDTO
 	if err := json.NewDecoder(r.Body).Decode(&dto); err != nil {
 		http.Error(w, "invalid request body", http.StatusBadRequest)
 		return
 	}
 
-	saveUC := application.NewSaveArticleUseCase(uc.repository)
+	saveUC := application.NewSaveFaqUseCase(uc.repository)
 	id, err := saveUC.Save(dto.Title, dto.Content, dto.Tags)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)

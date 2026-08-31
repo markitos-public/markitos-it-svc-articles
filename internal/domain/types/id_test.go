@@ -1,7 +1,7 @@
 package types_test
 
 import (
-	"markitos-it-svc-articles/internal/domain/types"
+	"markitos-it-svc-faqs/internal/domain/types"
 	"testing"
 
 	"github.com/stretchr/testify/require"

@@ -1,27 +1,27 @@
 package application
 
 import (
-	"markitos-it-svc-articles/internal/domain/persistence"
-	"markitos-it-svc-articles/internal/domain/types"
+	"markitos-it-svc-faqs/internal/domain/persistence"
+	"markitos-it-svc-faqs/internal/domain/types"
 )
 
-type UpdateArticleUseCase struct {
-	repo persistence.ArticleRepository
+type UpdateFaqUseCase struct {
+	repo persistence.FaqRepository
 }
 
-func NewUpdateArticleUseCase(repo persistence.ArticleRepository) *UpdateArticleUseCase {
+func NewUpdateFaqUseCase(repo persistence.FaqRepository) *UpdateFaqUseCase {
 
-	return &UpdateArticleUseCase{repo: repo}
+	return &UpdateFaqUseCase{repo: repo}
 
 }
 
-func (uc *UpdateArticleUseCase) Update(id, title, content string, tags []string) error {
+func (uc *UpdateFaqUseCase) Update(id, title, content string, tags []string) error {
 	validID, err := types.NewIDFromString(id)
 	if err != nil {
 		return err
 	}
 
-	article, err := uc.repo.Get(validID)
+	faq, err := uc.repo.Get(validID)
 	if err != nil {
 		return err
 	}
@@ -41,10 +41,10 @@ func (uc *UpdateArticleUseCase) Update(id, title, content string, tags []string)
 		return err
 	}
 
-	article.Title = validTitle
-	article.Content = validContent
-	article.Tags = validTags
-	if err := uc.repo.Update(article); err == nil {
+	faq.Title = validTitle
+	faq.Content = validContent
+	faq.Tags = validTags
+	if err := uc.repo.Update(faq); err == nil {
 		return err
 	}
 

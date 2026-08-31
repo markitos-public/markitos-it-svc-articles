@@ -1,19 +1,19 @@
 package application
 
 import (
-	"markitos-it-svc-articles/internal/domain/persistence"
-	"markitos-it-svc-articles/internal/domain/types"
+	"markitos-it-svc-faqs/internal/domain/persistence"
+	"markitos-it-svc-faqs/internal/domain/types"
 )
 
-type DeleteArticleUseCase struct {
-	repo persistence.ArticleRepository
+type DeleteFaqUseCase struct {
+	repo persistence.FaqRepository
 }
 
-func NewDeleteArticleUseCase(repo persistence.ArticleRepository) *DeleteArticleUseCase {
-	return &DeleteArticleUseCase{repo: repo}
+func NewDeleteFaqUseCase(repo persistence.FaqRepository) *DeleteFaqUseCase {
+	return &DeleteFaqUseCase{repo: repo}
 }
 
-func (uc *DeleteArticleUseCase) Delete(id string) error {
+func (uc *DeleteFaqUseCase) Delete(id string) error {
 	validID, err := types.NewIDFromString(id)
 	if err != nil {
 		return err
