@@ -19,9 +19,9 @@ type articleDTO struct {
 }
 
 func main() {
-	db, err := gorm.Open(pgdriver.Open(resolveDSN()), &gorm.Config{})
+	db, err := connectDatabase()
 	if err != nil {
-		log.Fatalf("failed to connect database: %v", err)
+		log.Fatalf("database connectivity check failed: %v", err)
 	}
 
 	repo := postgres.NewPostgresArticleRepository(db)
@@ -54,10 +54,29 @@ func main() {
 	})
 
 	address := resolveAddress()
-	log.Printf("Starting REST service on port %s...", address)
+	log.Printf("Database connectivity OK. Starting REST service on port %s...", address)
 	if err := http.ListenAndServe(address, mux); err != nil {
 		log.Fatalf("Server failed to start: %v", err)
 	}
+}
+
+func connectDatabase() (*gorm.DB, error) {
+	db, err := gorm.Open(pgdriver.Open(resolveDSN()), &gorm.Config{})
+	if err != nil {
+		return nil, err
+	}
+
+	sqlDB, err := db.DB()
+	if err != nil {
+		return nil, err
+	}
+
+	if err := sqlDB.Ping(); err != nil {
+		_ = sqlDB.Close()
+		return nil, err
+	}
+
+	return db, nil
 }
 
 func resolveDSN() string {
