@@ -6,12 +6,12 @@ import (
 )
 
 type SaveFaqUseCase struct {
-	repo persistence.FaqRepository
+	repository persistence.FaqRepository
 }
 
 func NewSaveFaqUseCase(repo persistence.FaqRepository) *SaveFaqUseCase {
 
-	return &SaveFaqUseCase{repo: repo}
+	return &SaveFaqUseCase{repository: repo}
 
 }
 
@@ -21,7 +21,7 @@ func (uc *SaveFaqUseCase) Save(title, content string, tags []string) (string, er
 		return "", err
 	}
 
-	err = uc.repo.Save(faq)
+	err = uc.repository.Save(faq)
 	if err != nil {
 		return "", err
 	}

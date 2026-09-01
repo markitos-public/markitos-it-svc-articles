@@ -2,6 +2,7 @@ package rest
 
 import (
 	"encoding/json"
+	"markitos-it-svc-faqs/internal/domain/application"
 	"markitos-it-svc-faqs/internal/domain/persistence"
 	"net/http"
 )
@@ -17,9 +18,10 @@ func NewRESTListUseCase(repository persistence.FaqRepository) *RESTListUseCase {
 }
 
 func (uc *RESTListUseCase) List(w http.ResponseWriter, r *http.Request) {
-	faqs, err := uc.repository.List()
+	listUC := application.NewListFaqUseCase(uc.repository)
+	faqs, err := listUC.List()
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

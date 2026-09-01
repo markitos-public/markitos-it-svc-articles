@@ -36,10 +36,12 @@ func setupTestRouter(t *testing.T) (*httptest.Server, *gorm.DB) {
 	getHandler := rest.NewRESTGetUseCase(repo)
 	updateHandler := rest.NewRESTUpdateUseCase(repo)
 	deleteHandler := rest.NewRESTDeleteUseCase(repo)
+	listHandler := rest.NewRESTListUseCase(repo)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /faqs", saveHandler.Save)
 	mux.HandleFunc("GET /faqs/{id}", getHandler.Get)
+	mux.HandleFunc("GET /faqs", listHandler.List)
 	mux.HandleFunc("PUT /faqs/{id}", updateHandler.Update)
 	mux.HandleFunc("DELETE /faqs/{id}", deleteHandler.Delete)
 

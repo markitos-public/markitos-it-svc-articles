@@ -6,12 +6,12 @@ import (
 )
 
 type UpdateFaqUseCase struct {
-	repo persistence.FaqRepository
+	repository persistence.FaqRepository
 }
 
 func NewUpdateFaqUseCase(repo persistence.FaqRepository) *UpdateFaqUseCase {
 
-	return &UpdateFaqUseCase{repo: repo}
+	return &UpdateFaqUseCase{repository: repo}
 
 }
 
@@ -21,7 +21,7 @@ func (uc *UpdateFaqUseCase) Update(id, title, content string, tags []string) err
 		return err
 	}
 
-	faq, err := uc.repo.Get(validID)
+	faq, err := uc.repository.Get(validID)
 	if err != nil {
 		return err
 	}
@@ -44,7 +44,7 @@ func (uc *UpdateFaqUseCase) Update(id, title, content string, tags []string) err
 	faq.Title = validTitle
 	faq.Content = validContent
 	faq.Tags = validTags
-	if err := uc.repo.Update(faq); err == nil {
+	if err := uc.repository.Update(faq); err == nil {
 		return err
 	}
 

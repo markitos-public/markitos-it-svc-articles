@@ -6,11 +6,11 @@ import (
 )
 
 type DeleteFaqUseCase struct {
-	repo persistence.FaqRepository
+	repository persistence.FaqRepository
 }
 
 func NewDeleteFaqUseCase(repo persistence.FaqRepository) *DeleteFaqUseCase {
-	return &DeleteFaqUseCase{repo: repo}
+	return &DeleteFaqUseCase{repository: repo}
 }
 
 func (uc *DeleteFaqUseCase) Delete(id string) error {
@@ -19,7 +19,7 @@ func (uc *DeleteFaqUseCase) Delete(id string) error {
 		return err
 	}
 
-	err = uc.repo.Delete(validID)
+	err = uc.repository.Delete(validID)
 	if err != nil {
 		return err
 	}

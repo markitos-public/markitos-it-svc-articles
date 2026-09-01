@@ -7,11 +7,11 @@ import (
 )
 
 type GetFaqUseCase struct {
-	repo persistence.FaqRepository
+	repository persistence.FaqRepository
 }
 
 func NewGetFaqUseCase(repo persistence.FaqRepository) *GetFaqUseCase {
-	return &GetFaqUseCase{repo: repo}
+	return &GetFaqUseCase{repository: repo}
 }
 
 func (uc *GetFaqUseCase) Get(id string) (*models.Faq, error) {
@@ -20,7 +20,7 @@ func (uc *GetFaqUseCase) Get(id string) (*models.Faq, error) {
 		return nil, err
 	}
 
-	faq, err := uc.repo.Get(validID)
+	faq, err := uc.repository.Get(validID)
 	if err != nil {
 		return nil, err
 	}
