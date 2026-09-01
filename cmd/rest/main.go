@@ -90,5 +90,10 @@ func resolveDSN() string {
 }
 
 func resolveAddress() string {
-	return ":8080"
+	address := os.Getenv("SERVER_ADDRESS")
+	if address == "" {
+		log.Fatal("SERVER_ADDRESS must be set")
+	}
+
+	return address
 }
