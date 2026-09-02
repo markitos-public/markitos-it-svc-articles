@@ -54,6 +54,11 @@ func main() {
 		deleteHandler.Delete(w, r)
 	})
 
+	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	})
+
 	address := resolveAddress()
 	log.Printf("Database connectivity OK. Starting REST service on port %s...", address)
 	if err := http.ListenAndServe(address, mux); err != nil {
