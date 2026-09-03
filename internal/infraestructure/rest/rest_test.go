@@ -39,11 +39,11 @@ func setupTestRouter(t *testing.T) (*httptest.Server, *gorm.DB) {
 	listHandler := rest.NewRESTListUseCase(repo)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("POST /faqs", saveHandler.Save)
-	mux.HandleFunc("GET /faqs/{id}", getHandler.Get)
-	mux.HandleFunc("GET /faqs", listHandler.List)
-	mux.HandleFunc("PUT /faqs/{id}", updateHandler.Update)
-	mux.HandleFunc("DELETE /faqs/{id}", deleteHandler.Delete)
+	mux.HandleFunc("POST /api/faqs", saveHandler.Save)
+	mux.HandleFunc("GET /api/faqs/{id}", getHandler.Get)
+	mux.HandleFunc("GET /api/faqs", listHandler.List)
+	mux.HandleFunc("PUT /api/faqs/{id}", updateHandler.Update)
+	mux.HandleFunc("DELETE /api/faqs/{id}", deleteHandler.Delete)
 
 	server := httptest.NewServer(mux)
 
@@ -68,7 +68,7 @@ func TestREST_FaqLifecycle(t *testing.T) {
 	body, err := json.Marshal(newFaq)
 	require.NoError(t, err)
 
-	resp, err := http.Post(server.URL+"/faqs", "application/json", bytes.NewBuffer(body))
+	resp, err := http.Post(server.URL+"/api/faqs", "application/json", bytes.NewBuffer(body))
 	require.NoError(t, err)
 	defer resp.Body.Close()
 
@@ -80,7 +80,7 @@ func TestREST_FaqLifecycle(t *testing.T) {
 	assert.NotEmpty(t, createdDTO.ID)
 	assert.Equal(t, newFaq.Title, createdDTO.Title)
 
-	getResp, err := http.Get(server.URL + "/faqs/" + createdDTO.ID)
+	getResp, err := http.Get(server.URL + "/api/faqs/" + createdDTO.ID)
 	require.NoError(t, err)
 	defer getResp.Body.Close()
 
@@ -98,7 +98,7 @@ func TestREST_FaqLifecycle(t *testing.T) {
 	updateBody, err := json.Marshal(updatedFaq)
 	require.NoError(t, err)
 
-	req, err := http.NewRequest(http.MethodPut, server.URL+"/faqs/"+createdDTO.ID, bytes.NewBuffer(updateBody))
+	req, err := http.NewRequest(http.MethodPut, server.URL+"/api/faqs/"+createdDTO.ID, bytes.NewBuffer(updateBody))
 	require.NoError(t, err)
 	req.Header.Set("Content-Type", "application/json")
 
@@ -109,7 +109,7 @@ func TestREST_FaqLifecycle(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, updateResp.StatusCode)
 
-	delReq, err := http.NewRequest(http.MethodDelete, server.URL+"/faqs/"+createdDTO.ID, nil)
+	delReq, err := http.NewRequest(http.MethodDelete, server.URL+"/api/faqs/"+createdDTO.ID, nil)
 	require.NoError(t, err)
 
 	delResp, err := client.Do(delReq)

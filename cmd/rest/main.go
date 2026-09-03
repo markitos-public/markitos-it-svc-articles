@@ -33,28 +33,28 @@ func main() {
 	listHandler := rest.NewRESTListUseCase(repo)
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /faqs", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /api/faqs", func(w http.ResponseWriter, r *http.Request) {
 		listHandler.List(w, r)
 	})
 
-	mux.HandleFunc("GET /faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /api/faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
 		getHandler.Get(w, r)
 	})
 
-	mux.HandleFunc("POST /faqs", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("POST /api/faqs", func(w http.ResponseWriter, r *http.Request) {
 		saveHandler.Save(w, r)
 
 	})
 
-	mux.HandleFunc("PUT /faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("PUT /api/faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
 		updateHandler.Update(w, r)
 	})
 
-	mux.HandleFunc("DELETE /faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("DELETE /api/faqs/{id}", func(w http.ResponseWriter, r *http.Request) {
 		deleteHandler.Delete(w, r)
 	})
 
-	mux.HandleFunc("GET /faqs/health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /api/faqs/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("OK"))
 	})
